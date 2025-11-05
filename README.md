@@ -16,6 +16,26 @@ Use it with:
 
 ---
 
+### Optional Integrations (New in v2.2.0)
+
+Enhance your Agent OS workflows with optional third-party integrations:
+
+**🔍 CodeRabbit CLI** - Automated code review
+- AI-powered security & quality checks after each task
+- Auto-fix critical issues before they reach production
+- Optional pre-commit hooks to prevent problematic commits
+
+**📚 Context7 MCP** - Up-to-date documentation
+- Access current, version-specific library documentation
+- Avoid outdated APIs and deprecated patterns
+- Integrated seamlessly into Claude Code
+
+**Both integrations are completely optional.** Agent OS works perfectly without them. Enable what you need in `config.yml`.
+
+👉 [Integration Guide](INTEGRATION_GUIDE.md) for setup instructions.
+
+---
+
 ### Documentation & Installation
 
 Docs, installation, usage, & best practices 👉 [It's all here](https://buildermethods.com/agent-os)

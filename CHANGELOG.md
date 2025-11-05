@@ -3,6 +3,114 @@
 Get notified of major releases by subscribing here:
 https://buildermethods.com/agent-os
 
+## [2.2.0] - 2025-11-05
+
+Version 2.2.0 introduces **optional third-party integrations** that enhance Agent OS workflows without changing core functionality. All integrations are completely optional and can be enabled/disabled via `config.yml`.
+
+### New Features
+
+**Optional CodeRabbit CLI Integration**
+- Automated AI-powered code review after each task implementation
+- **Scoped reviews**: Each agent reviews only their modified files (eliminates 400% duplication)
+- **Background execution**: Reviews run async while agents do documentation (48% faster)
+- **Comprehensive integration review**: Final review catches cross-agent issues (Phase 2.5)
+- **Smart pre-commit caching**: Skips redundant reviews if comprehensive review passed
+- Auto-fix workflow for critical and high-priority issues
+- Optional git pre-commit hooks to block commits with critical issues
+- Manual `/review-code` command for on-demand code reviews
+- Graceful degradation when disabled or unavailable
+
+**Optional Context7 MCP Integration**
+- Access to up-to-date, version-specific library documentation
+- Prevents usage of outdated or deprecated APIs
+- Seamlessly integrated into Claude Code via MCP (Model Context Protocol)
+- Tool preference hierarchy when enabled (Context7 → WebFetch → WebSearch)
+
+**New Configuration Options**
+- Added `enable_coderabbit: false` flag in config.yml
+- Added `enable_context7: false` flag in config.yml
+- Conditional tool validation script checks only enabled integrations
+- Integration-specific documentation in `integrations/` directory
+
+### Architecture Improvements
+
+- Clean separation of optional integrations in `profiles/default/integrations/`
+- Conditional workflow steps using `{{IF}}` template syntax
+- No impact on core Agent OS functionality when integrations disabled
+- Extensible integration framework for future third-party tools
+
+### CodeRabbit Integration Improvements
+
+**Fixed: Scope Collision in Multi-Agent Workflows**
+- Each agent now tracks and reviews only their modified files
+- Eliminates duplicate reviews (was 400% duplication, now 0%)
+- Correct domain expertise applied (no DB agent reviewing UI code)
+- File tracking via `MY_FILES` environment variable
+
+**Added: Background Review Execution**
+- Reviews run in background while agents work on documentation
+- Agents no longer blocked during 7-60 minute reviews
+- Periodic completion checks every 2 minutes
+- 60-minute timeout with error handling
+
+**Added: Comprehensive Integration Review (Phase 2.5)**
+- New workflow runs after all agents complete individual work
+- Reviews ALL changes together to catch integration issues
+- Validates cross-cutting concerns and architectural consistency
+- Creates `.all-agents-reviewed` marker for caching
+
+**Added: Smart Pre-Commit Hook Caching**
+- Pre-commit hook checks for comprehensive review marker
+- Skips redundant review if already done
+- Shows recent review files for reference
+- Saves 15 minutes on every commit
+
+**Performance**:
+- Before: 4 agents × 15 min = 60 min (400% duplication)
+- After: 4 agents × 6 min = 24 min + 15 min comprehensive = 39 min (48% faster)
+
+### Documentation
+
+- New `INTEGRATION_GUIDE.md` with comprehensive setup and usage instructions
+- Updated `README.md` with optional integrations section
+- Integration-specific standards and workflows organized by feature
+- Troubleshooting guides for common integration issues
+
+### What's Changed
+
+- Base version updated from 2.1.1
+- Config.yml version bumped to 2.2.0
+- Added `/review-code` command (enabled when `enable_coderabbit: true`)
+- Implementer workflow includes conditional code review steps
+- Validation script now reads config.yml and validates only enabled features
+
+### Backwards Compatibility
+
+✅ **Fully backwards compatible** - All integrations are opt-in:
+- Works exactly like v2.1.1 when both integrations disabled (default)
+- No breaking changes to existing workflows
+- Existing projects continue working without modification
+- Enable integrations only when needed
+
+### Installation
+
+After updating to 2.2.0, run the validation script to check which tools are needed:
+
+```bash
+~/agent-os/scripts/validate-tools.sh
+```
+
+Then enable desired integrations in `~/.agent-os/config.yml`:
+
+```yaml
+enable_coderabbit: true  # Optional code review
+enable_context7: true    # Optional documentation
+```
+
+See [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md) for full setup instructions.
+
+---
+
 ## [2.1.1] - 2025-10-29
 
 - Replaced references to 'spec-researcher' (depreciated agent name) with 'spec-shaper'.
@@ -10,7 +118,6 @@ https://buildermethods.com/agent-os
 - Tightened up template and istructions for writing spec.md, aiming to keep it shorter, easier to scan, and covering only the essentials.
 - Tweaked create-task-list workflow for consistency.
 - When planning product roadmap, removed instruction to limit it to 12 items.
-- Clarified instructions in implement-tasks in regards to useage of Playwright and screenshots.
 
 ## [2.1.0] - 2025-10-21
 

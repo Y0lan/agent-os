@@ -1,4 +1,4 @@
-version: 2.1.1
+version: 2.2.0
 base_install: true
 
 
@@ -54,3 +54,57 @@ standards_as_claude_code_skills: false
 # ================================================
 
 profile: default
+
+
+# ================================================
+# OPTIONAL INTEGRATIONS
+#
+# Enable third-party tool integrations to enhance Agent OS workflows.
+# All integrations are completely optional - Agent OS works perfectly without them.
+#
+# Override defaults when running project-install.sh:
+#   --enable-coderabbit true/false
+#   --enable-context7 true/false
+# ================================================
+
+
+# ================================================
+# CodeRabbit CLI Integration
+#
+# Provides automated AI-powered code review during implementation workflows.
+#
+# When enabled:
+# - Runs code review after each task implementation
+# - Auto-fixes critical/high-priority issues
+# - Blocks commits with critical issues via optional git hooks
+# - Adds /review-code command for manual reviews
+#
+# Requirements:
+# - CodeRabbit CLI installed and authenticated
+# - See: agent-os/integrations/coderabbit/standards/setup.md
+#
+# Set to true to enable CodeRabbit integration
+# Override with: --enable-coderabbit true/false
+# ================================================
+enable_coderabbit: false
+
+
+# ================================================
+# Context7 MCP Integration
+#
+# Provides access to up-to-date library documentation during implementation.
+#
+# When enabled:
+# - Prioritizes Context7 for documentation lookups
+# - Prevents usage of outdated or deprecated APIs
+# - Ensures version-specific documentation
+#
+# Requirements:
+# - Node.js 18+
+# - Context7 MCP installed via Claude Code
+# - See: agent-os/integrations/context7/standards/setup.md
+#
+# Set to true to enable Context7 integration
+# Override with: --enable-context7 true/false
+# ================================================
+enable_context7: false
